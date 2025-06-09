@@ -1,4 +1,4 @@
-package salesforce
+package salesforceclient
 
 type SendEmailRequest struct {
 	ContactKey         string      `json:"ContactKey,omitempty"`

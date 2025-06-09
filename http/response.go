@@ -1,4 +1,4 @@
-package salesforce
+package salesforceclient
 
 type TokenResponse struct {
 	AccessToken     string `json:"access_token"`

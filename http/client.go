@@ -1,4 +1,4 @@
-package salesforce
+package salesforceclient
 
 import (
 	"net/http"
