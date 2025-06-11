@@ -9,7 +9,7 @@ import (
 )
 
 func (c *Client) InsertDataRows(rows []interface{}, brand, extensionKey string) (*InsertDataRowsResponse, error) {
-	url := fmt.Sprintf("%s/v1/%s/InsertRows/%s", c.Config.Url, brand, extensionKey)
+	url := fmt.Sprintf("%s/v1/InsertRows/%s/%s", c.Config.Url, brand, extensionKey)
 	payload := map[string]interface{}{"items": rows}
 
 	resp, err := c.post(url, payload, &InsertDataRowsResponse{})
@@ -20,7 +20,7 @@ func (c *Client) InsertDataRows(rows []interface{}, brand, extensionKey string) 
 }
 
 func (c *Client) InsertDataRow(row interface{}, brand, extensionKey string) (*InsertDataRowsResponse, error) {
-	url := fmt.Sprintf("%s/v1/%s/InsertRows/%s", c.Config.Url, brand, extensionKey)
+	url := fmt.Sprintf("%s/v1/InsertRows/%s/%s", c.Config.Url, brand, extensionKey)
 	resp, err := c.post(url, row, &InsertDataRowsResponse{})
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (c *Client) InsertDataRow(row interface{}, brand, extensionKey string) (*In
 }
 
 func (c *Client) CheckInsert(requestId, brand string) (*CheckInsertRowsStatus, error) {
-	url := fmt.Sprintf("%s/v1/%s/InsertRows/check/%s", c.Config.Url, brand, requestId)
+	url := fmt.Sprintf("%s/v1/InsertRows/%s/check/%s", c.Config.Url, brand, requestId)
 	resp, err := c.get(url, &CheckInsertRowsStatus{})
 	if err != nil {
 		return nil, err
