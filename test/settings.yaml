@@ -1,0 +1,3 @@
+SfmcConfig :
+  Server: "172.16.17.135:443" 
+  Authority: "dev-grpcservices.sandals.com"

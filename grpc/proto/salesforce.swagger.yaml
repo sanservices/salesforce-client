@@ -1,0 +1,748 @@
+swagger: "2.0"
+info:
+  title: grpc/proto/salesforce.proto
+  version: version not set
+tags:
+  - name: SalesforceService
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /v1/InsertRows/{brand}/check/{requestId}:
+    get:
+      operationId: SalesforceService_CheckInsertRows
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceCheckInsertRowsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: requestId
+          in: path
+          required: true
+          type: string
+      tags:
+        - SalesforceService
+  /v1/InsertRows/{brand}/{extensionKey}:
+    post:
+      operationId: SalesforceService_InsertRows
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceInsertRowsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: extensionKey
+          in: path
+          required: true
+          type: string
+        - name: payload
+          in: body
+          required: true
+          schema:
+            type: object
+      tags:
+        - SalesforceService
+  /v1/deleteSchema/{brand}/{SchemaName}:
+    delete:
+      operationId: SalesforceService_DeleteSchema
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceDeleteSchemaResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: SchemaName
+          in: path
+          required: true
+          type: string
+      tags:
+        - SalesforceService
+  /v1/schema/fields/{brand}/{SchemaId}:
+    get:
+      operationId: SalesforceService_GetSchemaFields
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceSearchSchemaIdResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: SchemaId
+          in: path
+          required: true
+          type: string
+      tags:
+        - SalesforceService
+  /v1/searchSchema/{brand}/{SchemaName}:
+    get:
+      operationId: SalesforceService_SearchSchema
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceSearchSchemaResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: SchemaName
+          in: path
+          required: true
+          type: string
+      tags:
+        - SalesforceService
+  /v1/sendEmail/{brand}/{UUID}:
+    post:
+      operationId: SalesforceService_SendEmail
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceSendEmailResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: UUID
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SalesforceServiceSendEmailBody'
+      tags:
+        - SalesforceService
+  /v1/updateSchema/{brand}/field:
+    patch:
+      operationId: SalesforceService_UpdateSchemaField
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceSearchSchemaResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: SchemaName
+          in: query
+          required: false
+          type: string
+      tags:
+        - SalesforceService
+  /v1/{brand}/createSchema:
+    post:
+      operationId: SalesforceService_CreateSchema
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceCreateSchemaResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SalesforceServiceCreateSchemaBody'
+      tags:
+        - SalesforceService
+  /v1/{brand}/fireEvent:
+    post:
+      operationId: SalesforceService_FireEvent
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/salesforceFireEventResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: brand
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SalesforceServiceFireEventBody'
+      tags:
+        - SalesforceService
+definitions:
+  SalesforceServiceCreateSchemaBody:
+    type: object
+    properties:
+      Name:
+        type: string
+      CategoryID:
+        type: integer
+        format: int32
+      SendableField:
+        type: string
+      Description:
+        type: string
+      SendableSubscriberField:
+        type: string
+      CustomObjectTemplateName:
+        type: string
+      CustomObjectTemplateId:
+        type: string
+      Fields:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/salesforceFieldInput'
+      IsSendable:
+        type: boolean
+      IsTestable:
+        type: boolean
+  SalesforceServiceFireEventBody:
+    type: object
+    properties:
+      ContactKey:
+        type: string
+      EventDefinitionKey:
+        type: string
+      Data:
+        type: object
+  SalesforceServiceSendEmailBody:
+    type: object
+    properties:
+      DefinitionKey:
+        type: string
+      Recipient:
+        $ref: '#/definitions/salesforceRecipient'
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+        description: |-
+          A URL/resource name that uniquely identifies the type of the serialized
+          protocol buffer message. This string must contain at least
+          one "/" character. The last segment of the URL's path must represent
+          the fully qualified name of the type (as in
+          `path/google.protobuf.Duration`). The name should be in a canonical form
+          (e.g., leading "." is not accepted).
+
+          In practice, teams usually precompile into the binary all types that they
+          expect it to use in the context of Any. However, for URLs which use the
+          scheme `http`, `https`, or no scheme, one can optionally set up a type
+          server that maps type URLs to message definitions as follows:
+
+          * If no scheme is provided, `https` is assumed.
+          * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+            value in binary format, or produce an error.
+          * Applications are allowed to cache lookup results based on the
+            URL, or have them precompiled into a binary to avoid any
+            lookup. Therefore, binary compatibility needs to be preserved
+            on changes to types. (Use versioned type names to manage
+            breaking changes.)
+
+          Note: this functionality is not currently available in the official
+          protobuf release, and it is not used for type URLs beginning with
+          type.googleapis.com. As of May 2023, there are no widely used type server
+          implementations and no plans to implement one.
+
+          Schemes other than `http`, `https` (or the empty scheme) might be
+          used with implementation specific semantics.
+    additionalProperties: {}
+    description: |-
+      `Any` contains an arbitrary serialized protocol buffer message along with a
+      URL that describes the type of the serialized message.
+
+      Protobuf library provides support to pack/unpack Any values in the form
+      of utility functions or additional generated methods of the Any type.
+
+      Example 1: Pack and unpack a message in C++.
+
+          Foo foo = ...;
+          Any any;
+          any.PackFrom(foo);
+          ...
+          if (any.UnpackTo(&foo)) {
+            ...
+          }
+
+      Example 2: Pack and unpack a message in Java.
+
+          Foo foo = ...;
+          Any any = Any.pack(foo);
+          ...
+          if (any.is(Foo.class)) {
+            foo = any.unpack(Foo.class);
+          }
+          // or ...
+          if (any.isSameTypeAs(Foo.getDefaultInstance())) {
+            foo = any.unpack(Foo.getDefaultInstance());
+          }
+
+       Example 3: Pack and unpack a message in Python.
+
+          foo = Foo(...)
+          any = Any()
+          any.Pack(foo)
+          ...
+          if any.Is(Foo.DESCRIPTOR):
+            any.Unpack(foo)
+            ...
+
+       Example 4: Pack and unpack a message in Go
+
+           foo := &pb.Foo{...}
+           any, err := anypb.New(foo)
+           if err != nil {
+             ...
+           }
+           ...
+           foo := &pb.Foo{}
+           if err := any.UnmarshalTo(foo); err != nil {
+             ...
+           }
+
+      The pack methods provided by protobuf library will by default use
+      'type.googleapis.com/full.type.name' as the type URL and the unpack
+      methods only use the fully qualified type name after the last '/'
+      in the type URL, for example "foo.bar.com/x/y.z" will yield type
+      name "y.z".
+
+      JSON
+      ====
+      The JSON representation of an `Any` value uses the regular
+      representation of the deserialized, embedded message, with an
+      additional field `@type` which contains the type URL. Example:
+
+          package google.profile;
+          message Person {
+            string first_name = 1;
+            string last_name = 2;
+          }
+
+          {
+            "@type": "type.googleapis.com/google.profile.Person",
+            "firstName": <string>,
+            "lastName": <string>
+          }
+
+      If the embedded message type is well-known and has a custom JSON
+      representation, that representation will be embedded adding a field
+      `value` which holds the custom JSON in addition to the `@type`
+      field. Example (for message [google.protobuf.Duration][]):
+
+          {
+            "@type": "type.googleapis.com/google.protobuf.Duration",
+            "value": "1.212s"
+          }
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  salesforceCheckInsertRowsResponse:
+    type: object
+    properties:
+      page:
+        type: integer
+        format: int32
+      pageSize:
+        type: integer
+        format: int32
+      count:
+        type: integer
+        format: int32
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/salesforceCheckInsertRowsResponseItem'
+      requestId:
+        type: string
+      resultMessages:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/salesforceCheckInsertRowsResultMessage'
+        title: Adjust if resultMessages are structured
+  salesforceCheckInsertRowsResponseError:
+    type: object
+    properties:
+      errorMessage:
+        type: string
+      name:
+        type: string
+      errorCode:
+        type: integer
+        format: int32
+  salesforceCheckInsertRowsResponseItem:
+    type: object
+    properties:
+      message:
+        type: string
+      errors:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/salesforceCheckInsertRowsResponseError'
+      status:
+        type: string
+      errorCode:
+        type: integer
+        format: int32
+        title: optional; default is 0 if not present
+  salesforceCheckInsertRowsResultMessage:
+    type: object
+    properties:
+      ResultType:
+        type: string
+      ResultClass:
+        type: string
+      ResultCode:
+        type: string
+      Message:
+        type: string
+  salesforceCreateSchemaResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      key:
+        type: string
+      description:
+        type: string
+      isActive:
+        type: boolean
+      isSendable:
+        type: boolean
+      sendableCustomObjectField:
+        type: string
+      sendableSubscriberField:
+        type: string
+      isTestable:
+        type: boolean
+      categoryId:
+        type: integer
+        format: int32
+      isObjectDeletable:
+        type: boolean
+      isFieldAdditionAllowed:
+        type: boolean
+      isFieldModificationAllowed:
+        type: boolean
+      createdDate:
+        type: string
+      createdById:
+        type: integer
+        format: int32
+      createdByName:
+        type: string
+      modifiedDate:
+        type: string
+      modifiedById:
+        type: integer
+        format: int32
+      modifiedByName:
+        type: string
+      ownerId:
+        type: integer
+        format: int32
+      ownerName:
+        type: string
+      partnerApiObjectTypeId:
+        type: integer
+        format: int32
+      partnerApiObjectTypeName:
+        type: string
+      rowCount:
+        type: integer
+        format: int32
+      fieldCount:
+        type: integer
+        format: int32
+  salesforceDataRetentionProperties:
+    type: object
+    properties:
+      isDeleteAtEndOfRetentionPeriod:
+        type: boolean
+      isRowBasedRetention:
+        type: boolean
+      isResetRetentionPeriodOnImport:
+        type: boolean
+  salesforceDeleteSchemaResponse:
+    type: object
+    properties:
+      documentation:
+        type: string
+      errorcode:
+        type: integer
+        format: int32
+      message:
+        type: string
+  salesforceField:
+    type: object
+    properties:
+      ID:
+        type: string
+      Name:
+        type: string
+      Type:
+        type: string
+      MaskType:
+        type: string
+      StorageType:
+        type: string
+      Length:
+        type: integer
+        format: int32
+      Scale:
+        type: integer
+        format: int32
+      Description:
+        type: string
+      Ordinal:
+        type: integer
+        format: int32
+      IsNullable:
+        type: boolean
+      IsPrimaryKey:
+        type: boolean
+      IsActive:
+        type: boolean
+      IsTemplateField:
+        type: boolean
+      IsInheritable:
+        type: boolean
+      IsOverridable:
+        type: boolean
+      IsHidden:
+        type: boolean
+      IsReadOnly:
+        type: boolean
+      MustOverride:
+        type: boolean
+      IsSendable:
+        type: boolean
+  salesforceFieldInput:
+    type: object
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+        description: Text, EmailAddress, etc.
+      length:
+        type: integer
+        format: int32
+        title: Optional in Go, but always present in proto3 with default 0
+      scale:
+        type: integer
+        format: int32
+      isPrimaryKey:
+        type: boolean
+    title: Message representing a single field input
+  salesforceFireEventResponse:
+    type: object
+    properties:
+      eventInstanceId:
+        type: string
+      response:
+        $ref: '#/definitions/salesforceDeleteSchemaResponse'
+  salesforceInsertRowsResponse:
+    type: object
+    properties:
+      requestId:
+        type: string
+  salesforceItem:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      key:
+        type: string
+      description:
+        type: string
+      isActive:
+        type: boolean
+      isSendable:
+        type: boolean
+      sendableCustomObjectField:
+        type: string
+      sendableSubscriberField:
+        type: string
+      isTestable:
+        type: boolean
+      categoryId:
+        type: integer
+        format: int32
+      ownerId:
+        type: string
+        format: int64
+      isObjectDeletable:
+        type: boolean
+      isFieldAdditionAllowed:
+        type: boolean
+      isFieldModificationAllowed:
+        type: boolean
+      createdDate:
+        type: string
+      createdById:
+        type: string
+        format: int64
+      createdByName:
+        type: string
+      modifiedDate:
+        type: string
+      modifiedById:
+        type: string
+        format: int64
+      modifiedByName:
+        type: string
+      ownerName:
+        type: string
+      partnerApiObjectTypeId:
+        type: integer
+        format: int32
+      partnerApiObjectTypeName:
+        type: string
+      rowCount:
+        type: integer
+        format: int32
+      dataRetentionProperties:
+        $ref: '#/definitions/salesforceDataRetentionProperties'
+      fieldCount:
+        type: integer
+        format: int32
+  salesforceRecipient:
+    type: object
+    properties:
+      ContactKey:
+        type: string
+      To:
+        type: string
+      attributes:
+        type: object
+        additionalProperties:
+          type: string
+  salesforceSearchSchemaIdResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      fields:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/salesforceField'
+  salesforceSearchSchemaResponse:
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int32
+      page:
+        type: integer
+        format: int32
+      pageSize:
+        type: integer
+        format: int32
+      links:
+        type: object
+        additionalProperties:
+          type: string
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/salesforceItem'
+  salesforceSendEmailResponse:
+    type: object
+    properties:
+      RequestID:
+        type: string
+      MessageID:
+        type: string
+      Status:
+        type: string

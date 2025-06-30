@@ -1,0 +1,277 @@
+syntax = "proto3";
+
+package salesforce;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "salesforce-proto/pb";
+
+// Define the service
+service SalesforceService {
+  rpc FireEvent(FireEventRequest) returns (FireEventResponse) {
+    option (google.api.http) = {
+      post: "/v1/{brand}/fireEvent"
+      body: "*"
+    };
+  }
+
+  rpc CreateSchema(CreateSchemaRequest) returns (CreateSchemaResponse) {
+    option (google.api.http) = {
+      post: "/v1/{brand}/createSchema"
+      body: "*"
+    };
+  }
+  rpc SearchSchema(SearchSchemaRequest) returns (SearchSchemaResponse) {
+    option (google.api.http) = {get: "/v1/searchSchema/{brand}/{SchemaName}"};
+  }
+  rpc GetSchemaFields(SearchSchemaIdRequest) returns (SearchSchemaIdResponse) {
+    option (google.api.http) = {get: "/v1/schema/fields/{brand}/{SchemaId}"};
+  }
+  rpc DeleteSchema(SearchSchemaRequest) returns (DeleteSchemaResponse) {
+    option (google.api.http) = {delete: "/v1/deleteSchema/{brand}/{SchemaName}"};
+  }
+  rpc UpdateSchemaField(SearchSchemaRequest) returns (SearchSchemaResponse) {
+    option (google.api.http) = {patch: "/v1/updateSchema/{brand}/field"};
+  }
+  rpc InsertRows(InsertRowsRequest) returns (InsertRowsResponse) {
+    option (google.api.http) = {
+      post: "/v1/InsertRows/{brand}/{extensionKey}"
+      body: "payload"
+    };
+  }
+  rpc SendEmail(SendEmailRequest) returns (SendEmailResponse) {
+    option (google.api.http) = {
+      post: "/v1/sendEmail/{brand}/{UUID}"
+      body: "*"
+    };
+  }
+
+  rpc CheckInsertRows(CheckInsertRowsRequest) returns (CheckInsertRowsResponse) {
+    option (google.api.http) = {get: "/v1/InsertRows/{brand}/check/{requestId}"};
+  }
+}
+
+message Recipient {
+  string ContactKey = 1;
+  string To = 2;
+  map<string, string> attributes = 3;
+}
+message SendEmailRequest {
+  string brand = 1;
+  string DefinitionKey = 2;
+  string UUID = 3;
+  Recipient Recipient = 4;
+}
+message SendEmailResponse {
+  string RequestID = 1;
+  string MessageID = 2;
+  string Status = 3;
+}
+
+message FireEventRequest {
+  string brand = 1;
+  string ContactKey = 2;
+  string EventDefinitionKey = 3;
+  google.protobuf.Struct Data = 5;
+}
+
+message FireEventResponse {
+  oneof result {
+    string eventInstanceId = 1;
+    DeleteSchemaResponse response = 2;
+  }
+}
+
+message CreateSchemaRequest {
+  string brand = 1;
+  string Name = 2;
+  int32 CategoryID = 3;
+  optional string SendableField = 4;
+  optional string Description = 5;
+  optional string SendableSubscriberField = 6;
+  optional string CustomObjectTemplateName = 7;
+  optional string CustomObjectTemplateId = 8;
+  repeated FieldInput Fields = 9;
+  optional bool IsSendable = 10;
+  optional bool IsTestable = 11;
+}
+
+message UpdateSchemaRequest {
+  string brand = 1;
+  string Name = 2;
+  int32 CategoryID = 3;
+  optional string SendableField = 4;
+  repeated FieldInput Fields = 5;
+}
+
+message UpdateSchemaFieldRequest {
+  string brand = 1;
+  string id = 2;
+  FieldInput Field = 3;
+}
+
+message CreateSchemaResponse {
+  string id = 1;
+  string name = 2;
+  string key = 3;
+  string description = 4;
+  bool is_active = 5;
+  bool is_sendable = 6;
+  string sendable_custom_object_field = 7;
+  optional string sendable_subscriber_field = 8;
+  bool is_testable = 9;
+  int32 category_id = 10;
+  bool is_object_deletable = 11;
+  bool is_field_addition_allowed = 12;
+  bool is_field_modification_allowed = 13;
+  string created_date = 14;
+  int32 created_by_id = 15;
+  string created_by_name = 16;
+  string modified_date = 17;
+  int32 modified_by_id = 18;
+  string modified_by_name = 19;
+  int32 owner_id = 20;
+  string owner_name = 21;
+  int32 partner_api_object_type_id = 22;
+  string partner_api_object_type_name = 23;
+  int32 row_count = 24;
+  int32 field_count = 25;
+}
+
+// Message representing a single field input
+message FieldInput {
+  string name = 1;
+  string type = 2; // Text, EmailAddress, etc.
+  int32 length = 3; // Optional in Go, but always present in proto3 with default 0
+  int32 scale = 4;
+  bool is_primary_key = 5;
+}
+
+message DataRetentionProperties {
+  bool isDeleteAtEndOfRetentionPeriod = 1;
+  bool isRowBasedRetention = 2;
+  bool isResetRetentionPeriodOnImport = 3;
+}
+
+message Item {
+  string id = 1;
+  string name = 2;
+  string key = 3;
+  string description = 4;
+  bool isActive = 5;
+  bool isSendable = 6;
+  string sendableCustomObjectField = 7;
+  optional string sendableSubscriberField = 8;
+  bool isTestable = 9;
+  int32 categoryId = 10;
+  int64 ownerId = 11;
+  bool isObjectDeletable = 12;
+  bool isFieldAdditionAllowed = 13;
+  bool isFieldModificationAllowed = 14;
+  string createdDate = 15;
+  int64 createdById = 16;
+  string createdByName = 17;
+  string modifiedDate = 18;
+  int64 modifiedById = 19;
+  string modifiedByName = 20;
+  string ownerName = 21;
+  int32 partnerApiObjectTypeId = 22;
+  string partnerApiObjectTypeName = 23;
+  int32 rowCount = 24;
+  DataRetentionProperties dataRetentionProperties = 25;
+  int32 fieldCount = 26;
+}
+
+message Field {
+  string ID = 1;
+  string Name = 2;
+  string Type = 3;
+  string MaskType = 4;
+  string StorageType = 5;
+  int32 Length = 6;
+  int32 Scale = 7;
+  string Description = 8;
+  int32 Ordinal = 9;
+  bool IsNullable = 10;
+  bool IsPrimaryKey = 11;
+  bool IsActive = 12;
+  bool IsTemplateField = 13;
+  bool IsInheritable = 14;
+  bool IsOverridable = 15;
+  bool IsHidden = 16;
+  bool IsReadOnly = 17;
+  bool MustOverride = 18;
+  bool IsSendable = 19;
+}
+
+message SearchSchemaRequest {
+  string brand = 1;
+  string SchemaName = 2;
+}
+message SearchSchemaResponse {
+  int32 count = 1;
+  int32 page = 2;
+  int32 pageSize = 3;
+  map<string, string> links = 4;
+  repeated Item items = 5;
+}
+message SearchSchemaIdRequest {
+  string brand = 1;
+  string SchemaId = 2;
+}
+message SearchSchemaIdResponse {
+  string id = 1;
+  repeated Field fields = 2;
+}
+
+message DeleteSchemaResponse {
+  string documentation = 1;
+  int32 errorcode = 2;
+  string message = 3;
+}
+message InsertRowsRequest {
+  string brand = 1;
+  google.protobuf.Struct payload = 2;
+  string extensionKey = 3;
+}
+
+message InsertRowsResponse {
+  string requestId = 1;
+}
+
+message CheckInsertRowsRequest {
+  string brand = 1;
+  string requestId = 2;
+}
+
+message CheckInsertRowsResponseError {
+  string errorMessage = 1;
+  string name = 2;
+  int32 errorCode = 3;
+}
+message CheckInsertRowsResponseItem {
+  string message = 1;
+  repeated CheckInsertRowsResponseError errors = 2;
+  string status = 3;
+  int32 errorCode = 4; // optional; default is 0 if not present
+}
+
+message CheckInsertRowsResponse {
+  int32 page = 1;
+  int32 pageSize = 2;
+  int32 count = 3;
+  repeated CheckInsertRowsResponseItem items = 4;
+  string requestId = 5;
+  repeated CheckInsertRowsResultMessage resultMessages = 6; // Adjust if resultMessages are structured
+}
+
+message CheckInsertRowsResultMessage {
+  string ResultType = 1;
+  string ResultClass = 2;
+  string ResultCode = 3;
+  string Message = 4;
+}
